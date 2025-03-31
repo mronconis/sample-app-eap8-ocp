@@ -1,0 +1,22 @@
+kind: BuildConfig
+apiVersion: build.openshift.io/v1
+metadata:
+  name: "sample-app-eap8-ocp-build" 
+spec:
+  runPolicy: "Serial"
+  source: 
+    git:
+      uri: "https://github.com/mronconis/sample-app-eap8-ocp"
+  strategy:
+    type: Docker                      
+    dockerStrategy:
+      dockerfilePath: src/docker/Dockerfile
+    env:
+        - name: GALLEON_PROVISION_FEATURE_PACKS
+          value: org.jboss.eap:wildfly-ee-galleon-pack,org.jboss.eap.cloud:eap-cloud-galleon-pack
+        - name: GALLEON_PROVISION_LAYERS
+          value: cloud-default-config
+  output: 
+    to:
+      kind: "ImageStreamTag"
+      name: "sample-app-eap8-ocp:latest"
